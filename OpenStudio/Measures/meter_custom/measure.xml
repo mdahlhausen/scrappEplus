@@ -2,8 +2,8 @@
   <schema_version>3.0</schema_version>
   <name>meter_custom</name>
   <uid>4b323dbc-652b-447f-a883-fbdc9f2e651b</uid>
-  <version_id>f35a7cc0-7d6b-45f0-8d08-841f98489501</version_id>
-  <version_modified>20170107T002359Z</version_modified>
+  <version_id>2eb13171-52d5-48f1-af52-7eb115b56373</version_id>
+  <version_modified>20170107T012553Z</version_modified>
   <xml_checksum>7D30B605</xml_checksum>
   <class_name>MeterCustom</class_name>
   <display_name>Custom Meter</display_name>
@@ -209,12 +209,6 @@
       <checksum>8653F6C0</checksum>
     </file>
     <file>
-      <filename>apartment_lighting.csv</filename>
-      <filetype>csv</filetype>
-      <usage_type>resource</usage_type>
-      <checksum>7F54A5C4</checksum>
-    </file>
-    <file>
       <version>
         <software_program>OpenStudio</software_program>
         <identifier>1.4.2</identifier>
@@ -223,7 +217,13 @@
       <filename>measure.rb</filename>
       <filetype>rb</filetype>
       <usage_type>script</usage_type>
-      <checksum>AFFEDBF9</checksum>
+      <checksum>32727369</checksum>
+    </file>
+    <file>
+      <filename>apartment_only_lighting.csv</filename>
+      <filetype>csv</filetype>
+      <usage_type>resource</usage_type>
+      <checksum>0B8411A9</checksum>
     </file>
   </files>
 </measure>
