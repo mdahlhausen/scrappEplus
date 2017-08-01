@@ -70,7 +70,7 @@ module OsLib_HVAC
     return result
 
   end # end of def
-  
+
   # sort zones according to model options
   def OsLib_HVAC.sortZones(model, runner, options = {})
 
@@ -238,8 +238,7 @@ module OsLib_HVAC
     # remove all zone equipment except zone exhaust fans
     zones.each do |zone|
       zone.equipment.each do |equip|
-        if equip.to_FanZoneExhaust.is_initialized or equip.to_AirTerminalSingleDuctUncontrolled.is_initialized
-        else
+        if !equip.to_FanZoneExhaust.is_initialized
           equip.remove
         end
       end
@@ -1179,7 +1178,7 @@ module OsLib_HVAC
     result = airloop_primary
     return result
 
-  end # end of def 
+  end # end of def
 
   def OsLib_HVAC.createSecondaryAirLoops(model, runner, options)
 
@@ -1434,32 +1433,39 @@ module OsLib_HVAC
 
   def OsLib_HVAC.createPrimaryZoneEquipment(model, runner, options)
 
+    availability_schedule = options["availabilitySchedule"]
+  
     model.getThermalZones.each do |zone|
       if options["zonesPrimary"].include? zone
         if options["zoneHVAC"] == "FanCoil"
           # create fan coil
           # create fan
-          fan = OpenStudio::Model::FanOnOff.new(model, model.alwaysOnDiscreteSchedule())
-          fan.setFanEfficiency(0.5)
+          fan = OpenStudio::Model::FanVariableVolume.new(model,availability_schedule)
+          fan.setName("#{zone.name.to_s} FanCoil VarVolFan")
+          fan.setFanEfficiency(0.6)
           fan.setPressureRise(75) #Pa
           fan.autosizeMaximumFlowRate()
           fan.setMotorEfficiency(0.9)
           fan.setMotorInAirstreamFraction(1.0)
           # create cooling coil and connect to chilled water plant
-          cooling_coil = OpenStudio::Model::CoilCoolingWater.new(model, model.alwaysOnDiscreteSchedule())
+          cooling_coil = OpenStudio::Model::CoilCoolingWater.new(model, availability_schedule)
+          cooling_coil.setName("#{zone.name.to_s} FanCoil CoolCoil")
           options["chilled_water_plant"].addDemandBranchForComponent(cooling_coil)
           cooling_coil.controllerWaterCoil.get.setMinimumActuatedFlow(0)
           # create heating coil and connect to hot water plant
-          heating_coil = OpenStudio::Model::CoilHeatingWater.new(model, model.alwaysOnDiscreteSchedule())
+          heating_coil = OpenStudio::Model::CoilHeatingWater.new(model, availability_schedule)
+          heating_coil.setName("#{zone.name.to_s} FanCoil HeatCoil")
           options["hot_water_plant"].addDemandBranchForComponent(heating_coil)
           heating_coil.controllerWaterCoil.get.setMinimumActuatedFlow(0)
           # construct fan coil
           fan_coil = OpenStudio::Model::ZoneHVACFourPipeFanCoil.new(model,
-                                                                    model.alwaysOnDiscreteSchedule(),
+                                                                    availability_schedule,
                                                                     fan,
                                                                     cooling_coil,
                                                                     heating_coil)
-          fan_coil.setMaximumOutdoorAirFlowRate(0)                                                          
+          fan_coil.setCapacityControlMethod("VariableFanVariableFlow")
+          fan_coil.setMaximumOutdoorAirFlowRate(0)
+          fan_coil.setName("#{zone.name.to_s} - Zone HVAC Four Pipe Fan Coil")
           # add fan coil to thermal zone
           fan_coil.addToThermalZone(zone)
         elsif options["zoneHVAC"] == "WSHP" or options["zoneHVAC"] == "GSHP"
@@ -1867,5 +1873,5 @@ module OsLib_HVAC
       airloop.addBranchForZone(zone, air_terminal.to_StraightComponent)
     end
   end # end of def
-  
+
 end
