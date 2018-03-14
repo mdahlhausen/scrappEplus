@@ -15,3 +15,7 @@ addScheduleFromFile
 # Examples
 ### ```ruby addScheduleFromFile.rb 'C:\path\to\model.osm' 'C:\path\to\values.csv' 'ScheduleName' -k```
 ### ```ruby addScheduleFromFile.rb 'base.osm' 'values.csv' 'MySchedule' -k```
+
+# I got problems
+### 1) Check to make sure the numbers are float - e.g. 1.0 instead of 1
+### 2) Make sure your data is 8760.  It'll give :(  if < 8760, and will just omit the end if > 8760.
