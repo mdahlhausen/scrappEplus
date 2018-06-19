@@ -286,7 +286,8 @@ A second functionality is to remove unused resources. This will include things l
       model.getCurves.sort.each do |resource|
         if resource.directUseCount == 0
           unused_flag_counter += 1
-          resource.remove
+          # work-around logic since <OpenStudio::Model::Curve>.remove doesn't work
+          model.removeObject(resource.handle)
         end
       end
       runner.registerInfo("Removed #{unused_flag_counter} unused curves")
