@@ -1,0 +1,266 @@
+<measure>
+  <schema_version>3.0</schema_version>
+  <name>transfer_air_zone_mixing</name>
+  <uid>81418345-0c4d-453e-b21b-03dfa1caa874</uid>
+  <version_id>f21349d9-3763-4c97-8766-ef64765b390f</version_id>
+  <version_modified>20170331T231847Z</version_modified>
+  <xml_checksum>34D7A528</xml_checksum>
+  <class_name>TransferAirZoneMixing</class_name>
+  <display_name>Transfer Air Zone Mixing</display_name>
+  <description>This measure models air transfering from a source zone to receiving zone.  It asks the user to specify the flow rate, zone, and source zone.  Schedule limits for flow rate, and minimum and maximum temperatures for source zone, receiving zone, and outdoor air temperatures can be input, as described in the EnergyPlus InputOutput reference. This measure will also add a dummy zone exhaust fan to the source zone to subtract the flow from the return air of that zone.  The balancing of the source zone supply, return, and transfer flows is the user's responsibility.</description>
+  <modeler_description>This measure models air transfering from a source zone to receiving zone using the ZoneMixing object.  It asks the user to specify the flow rate, zone, and source zone.  Schedule limits for flow rate, and minimum and maximum temperatures for source zone, receiving zone, and outdoor air temperatures can be input, as described in the EnergyPlus InputOutput reference. This measure will also add a dummy FanZoneExhaust object to the source zone to subtract the flow from the return air of that zone.  The balancing of the source zone supply, return, and transfer flows is the user's responsibility.</modeler_description>
+  <arguments>
+    <argument>
+      <name>receiving_zone</name>
+      <display_name>Choose the Receiving Zone:</display_name>
+      <type>Choice</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+    </argument>
+    <argument>
+      <name>source_zone</name>
+      <display_name>Choose the Source Zone:</display_name>
+      <type>Choice</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+    </argument>
+    <argument>
+      <name>flow_rate_method_choice</name>
+      <display_name>Choose a flow rate method to use:</display_name>
+      <type>Choice</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>Flow (m3/s)</default_value>
+      <choices>
+        <choice>
+          <value>Flow (m3/s)</value>
+          <display_name>Flow (m3/s)</display_name>
+        </choice>
+        <choice>
+          <value>Flow per area of receiving zone (m3/s-m2)</value>
+          <display_name>Flow per area of receiving zone (m3/s-m2)</display_name>
+        </choice>
+        <choice>
+          <value>Flow per area of source zone (m3/s-m2)</value>
+          <display_name>Flow per area of source zone (m3/s-m2)</display_name>
+        </choice>
+        <choice>
+          <value>Flow per person of receiving zone (m3/s-person)</value>
+          <display_name>Flow per person of receiving zone (m3/s-person)</display_name>
+        </choice>
+        <choice>
+          <value>Flow per person of source zone (m3/s-person)</value>
+          <display_name>Flow per person of source zone (m3/s-person)</display_name>
+        </choice>
+        <choice>
+          <value>Air changes per hour of receiving zone (ACH)</value>
+          <display_name>Air changes per hour of receiving zone (ACH)</display_name>
+        </choice>
+        <choice>
+          <value>Air changes per hour of source zone (ACH)</value>
+          <display_name>Air changes per hour of source zone (ACH)</display_name>
+        </choice>
+      </choices>
+    </argument>
+    <argument>
+      <name>flow_value</name>
+      <display_name>Flow value for the flow rate method chosen:</display_name>
+      <description>Remember to convert IP to SI units.</description>
+      <type>Double</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>0</default_value>
+    </argument>
+    <argument>
+      <name>flow_sch</name>
+      <display_name>Select Schedule to Modify the Flow Rate (optional, default is always 1.0):</display_name>
+      <type>Choice</type>
+      <required>false</required>
+      <model_dependent>false</model_dependent>
+    </argument>
+    <argument>
+      <name>delta_temp</name>
+      <display_name>Set the Delta Temperature (optional):</display_name>
+      <description>Remember to convert IP to SI units.</description>
+      <type>Double</type>
+      <required>false</required>
+      <model_dependent>false</model_dependent>
+      <default_value>0</default_value>
+    </argument>
+    <argument>
+      <name>delta_temp_sch</name>
+      <display_name>Select Delta Temperature Schedule (optional):</display_name>
+      <type>Choice</type>
+      <required>false</required>
+      <model_dependent>false</model_dependent>
+    </argument>
+    <argument>
+      <name>min_rec_zone_temp_sch</name>
+      <display_name>Select Minimum Receiving Zone Temperature Schedule (optional):</display_name>
+      <type>Choice</type>
+      <required>false</required>
+      <model_dependent>false</model_dependent>
+    </argument>
+    <argument>
+      <name>max_rec_zone_temp_sch</name>
+      <display_name>Select Maximum Receiving Zone Temperature Schedule (optional):</display_name>
+      <type>Choice</type>
+      <required>false</required>
+      <model_dependent>false</model_dependent>
+    </argument>
+    <argument>
+      <name>min_source_zone_temp_sch</name>
+      <display_name>Select Minimum Source Zone Temperature Schedule (optional):</display_name>
+      <type>Choice</type>
+      <required>false</required>
+      <model_dependent>false</model_dependent>
+    </argument>
+    <argument>
+      <name>max_source_zone_temp_sch</name>
+      <display_name>Select Maximum Source Zone Temperature Schedule (optional):</display_name>
+      <type>Choice</type>
+      <required>false</required>
+      <model_dependent>false</model_dependent>
+    </argument>
+    <argument>
+      <name>min_oa_temp_sch</name>
+      <display_name>Select Minimum Outdoor Air Temperature Schedule (optional):</display_name>
+      <type>Choice</type>
+      <required>false</required>
+      <model_dependent>false</model_dependent>
+    </argument>
+    <argument>
+      <name>max_oa_temp_sch</name>
+      <display_name>Select Maximum Outdoor Air Temperature Schedule (optional):</display_name>
+      <type>Choice</type>
+      <required>false</required>
+      <model_dependent>false</model_dependent>
+    </argument>
+    <argument>
+      <name>add_zone_exhaust_fan</name>
+      <display_name>Add Source Zone Exhaust Fan (recommended)</display_name>
+      <type>Boolean</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>true</default_value>
+      <choices>
+        <choice>
+          <value>true</value>
+          <display_name>true</display_name>
+        </choice>
+        <choice>
+          <value>false</value>
+          <display_name>false</display_name>
+        </choice>
+      </choices>
+    </argument>
+    <argument>
+      <name>couple_zone_exhaust_fan</name>
+      <display_name>Couple Source Zone Exhaust Fan to Source Zone System Availability Manager (recommended)</display_name>
+      <type>Boolean</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>true</default_value>
+      <choices>
+        <choice>
+          <value>true</value>
+          <display_name>true</display_name>
+        </choice>
+        <choice>
+          <value>false</value>
+          <display_name>false</display_name>
+        </choice>
+      </choices>
+    </argument>
+    <argument>
+      <name>add_zone_mixing_variables</name>
+      <display_name>Add Zone Mixing Output Variable Requests</display_name>
+      <type>Boolean</type>
+      <required>true</required>
+      <model_dependent>false</model_dependent>
+      <default_value>true</default_value>
+      <choices>
+        <choice>
+          <value>true</value>
+          <display_name>true</display_name>
+        </choice>
+        <choice>
+          <value>false</value>
+          <display_name>false</display_name>
+        </choice>
+      </choices>
+    </argument>
+  </arguments>
+  <provenances/>
+  <tags>
+    <tag>HVAC.Distribution</tag>
+  </tags>
+  <attributes>
+    <attribute>
+      <name>Intended Software Tool</name>
+      <value>Apply Measure Now</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Intended Software Tool</name>
+      <value>OpenStudio Application</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Intended Software Tool</name>
+      <value>Parametric Analysis Tool</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Measure Type</name>
+      <value>ModelMeasure</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Intended Software Tool</name>
+      <value>Apply Measure Now</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Intended Software Tool</name>
+      <value>OpenStudio Application</value>
+      <datatype>string</datatype>
+    </attribute>
+    <attribute>
+      <name>Intended Software Tool</name>
+      <value>Parametric Analysis Tool</value>
+      <datatype>string</datatype>
+    </attribute>
+  </attributes>
+  <files>
+    <file>
+      <filename>example_model.osm</filename>
+      <filetype>osm</filetype>
+      <usage_type>test</usage_type>
+      <checksum>AD3A8B94</checksum>
+    </file>
+    <file>
+      <filename>SimpleTest.osm</filename>
+      <filetype>osm</filetype>
+      <usage_type>test</usage_type>
+      <checksum>38ED88B9</checksum>
+    </file>
+    <file>
+      <filename>transfer_air_zone_mixing_test.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>test</usage_type>
+      <checksum>66884A73</checksum>
+    </file>
+    <file>
+      <version>
+        <software_program>OpenStudio</software_program>
+        <identifier>1.8.4</identifier>
+        <min_compatible>1.8.0</min_compatible>
+      </version>
+      <filename>measure.rb</filename>
+      <filetype>rb</filetype>
+      <usage_type>script</usage_type>
+      <checksum>6D2AE635</checksum>
+    </file>
+  </files>
+</measure>
